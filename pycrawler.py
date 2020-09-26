@@ -17,7 +17,8 @@ class crawler:
         :return: n/a
         """
         self.parser = self.arguments()
-        self.crawler_site = {}
+        self.domain = ''
+        self.used = set()
         self.start_crawler()
 
     def arguments(self):
@@ -33,20 +34,24 @@ class crawler:
 
     def start_crawler(self):
         try:
-            self.crawler_info['domain'] = VALID_URL.match(
+            self.domain = VALID_URL.match(
                 self.parser.domain[0]).string
-            print('[+] Domain -> ' + self.crawler_info['domain'])
+            print('[+] Domain -> ' + self.domain)
         except:
             raise TypeError(
                 f'given domain is not valid "{self.parser.domain[0]}"')
-
-        self.crawler_info['used'] = set()
 
     def crawler(self, url):
         if (type(url) is not str):
             pass
         else:
-            self.crawler_info['used'].add(url)
+            self.used.add(url)
+            for found_url in find_urls(url):
+                if (found_url in self.used):
+                    continue
+
+    def find_urls(self, url):
+        pass
 
 
 crawler()
