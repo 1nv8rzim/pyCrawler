@@ -108,8 +108,8 @@ class crawler:
                 continue
             if self.domain not in href:
                 continue
-            print('[+] ' + href)
             urls.add(href)
+
         return urls
 
 
