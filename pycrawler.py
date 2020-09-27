@@ -56,6 +56,7 @@ class crawler:
         if(self.is_valid_url(self.parser.domain)):
             self.domain = self.parser.domain
             print('[+] Domain -> ' + self.domain)
+            self.crawler(self.domain)
         else:
             raise TypeError(
                 f'given domain is not valid "{self.parser.domain}"')
@@ -74,7 +75,7 @@ class crawler:
             for found_url in find_urls(url):
                 if (found_url in self.used):
                     continue
-                self.crawler
+                self.crawler(found_url)
 
     def find_urls(self, url):
         """
