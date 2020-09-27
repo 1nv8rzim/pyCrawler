@@ -4,6 +4,10 @@ from urllib.parse import urlparse, urljoin
 from bs4 import BeautifulSoup
 
 
+HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0', 'Accept': 'image/webp,*/*',
+           'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
+
+
 class crawler:
     """
     Main class for webcrawler
@@ -17,10 +21,8 @@ class crawler:
         self.domain = ''
         self.used = set()
         self.start_crawler()
-        self.headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0', 'Accept': 'image/webp,*/*',
-                        'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
         for url in self.used:
-            print('[+] ' + url)
+            print('[X] ' + url)
 
     def arguments(self):
         """
@@ -92,7 +94,7 @@ class crawler:
         urls = set()
         domain_name = urlparse(url).netloc
         soup = BeautifulSoup(requests.get(
-            url=url, headers=self.headers).content, 'html.parser')
+            url=url, headers=HEADERS).content, 'html.parser')
         for a_tag in soup.findAll('a'):
             href = a_tag.attrs.get('href')
             if href is None or href == '':
@@ -101,7 +103,7 @@ class crawler:
             parsed_href = urlparse(href)
             href = parsed_href.scheme + '://' + parsed_href.netloc + parsed_href.path
             print('[+] ' + href)
-            if is_valid_url(href):
+            if self.is_valid_url(href):
                 continue
             if href in self.used:
                 continue
