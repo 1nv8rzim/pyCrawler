@@ -10,7 +10,7 @@ HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0)
 
 class crawler:
     """
-    Main class for webcrawler
+    Main class for pycrawler
     """
 
     def __init__(self):
@@ -109,7 +109,6 @@ class crawler:
             if self.domain not in href:
                 continue
             urls.add(href)
-
         return urls
 
 
