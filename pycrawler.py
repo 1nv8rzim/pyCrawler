@@ -17,6 +17,8 @@ class crawler:
         self.domain = ''
         self.used = set()
         self.start_crawler()
+        for url in self.used:
+            print('[+] ' + url)
 
     def arguments(self):
         """
