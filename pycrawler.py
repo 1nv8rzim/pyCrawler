@@ -75,9 +75,33 @@ class crawler:
         return parsed.scheme and parsed.netloc
 
     def find_urls(self, url):
+        """
+        Finds all url in a given url
+
+        Args:
+            url (str): url of webpage being search through
+
+        Returns:
+            set : set of unique urls to given page
+        """
         urls = set()
         domain_name = urlparse(url).netloc
         soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+        for a_tag in soup.findAll('a'):
+            href = a_tag.attrs.get('href')
+            if href is None or href == '':
+                continue
+            href = urljoin(url, href)
+            parsed_href = urlparse(href)
+            href = parsed_href.scheme + '://' + parsed_href.netloc + parsed_href.path
+            if is_valid_url(href):
+                continue
+            if href in self.used:
+                continue
+            if self.domain not in href:
+                continue
+            urls.add(href)
+        return urls
 
 
 crawler()
