@@ -21,8 +21,8 @@ class crawler:
         self.domain = ''
         self.used = set()
         self.start_crawler()
-        for url in self.used:
-            print('[X] ' + url)
+        for url in sorted(list(self.used)):
+            print('[+] ' + url)
 
     def arguments(self):
         """
@@ -59,8 +59,9 @@ class crawler:
         """
         if(self.is_valid_url(self.parser.domain)):
             self.domain = self.parser.domain
-            print('[+] Domain -> ' + self.domain)
-            self.crawler(self.domain)
+            print('[X] Domain -> ' + self.domain)
+            for url in self.find_urls(self.domain):
+                self.crawler(url)
         else:
             raise TypeError(
                 f'given domain is not valid "{self.parser.domain}"')
@@ -72,7 +73,7 @@ class crawler:
         Args:
             url ([str]): given url of the page that will be used to find all urls on the page and runs the same command
         """
-        self.add_crawler(url)
+        self.used.add(url)
         if self.domain not in url:
             pass
         elif url[-4:].lower() in ('.jpg', 'jpeg', '.png', '.gif', '.pdf', 'tiff', '.raw'):
@@ -84,6 +85,7 @@ class crawler:
                 self.crawler(found_url)
         elif url[-3].lower() == '.js':
             pass
+            # TODO add js parsing
 
     def find_urls(self, url):
         """
