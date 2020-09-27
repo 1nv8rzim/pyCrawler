@@ -72,7 +72,8 @@ class crawler:
             pass
         else:
             self.used.add(url)
-            for found_url in find_urls(url):
+            for found_url in self.find_urls(url):
+                print('[+] ' + found_url)
                 if (found_url in self.used):
                     continue
                 self.crawler(found_url)
@@ -97,6 +98,7 @@ class crawler:
             href = urljoin(url, href)
             parsed_href = urlparse(href)
             href = parsed_href.scheme + '://' + parsed_href.netloc + parsed_href.path
+            print('[+] ' + href)
             if is_valid_url(href):
                 continue
             if href in self.used:
@@ -108,4 +110,4 @@ class crawler:
 
 
 if __name__ == '__main__':
-    crawler()
+    crawl = crawler()
