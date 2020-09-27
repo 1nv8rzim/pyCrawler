@@ -17,6 +17,8 @@ class crawler:
         self.domain = ''
         self.used = set()
         self.start_crawler()
+        self.headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0', 'Accept': 'image/webp,*/*',
+                        'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
         for url in self.used:
             print('[+] ' + url)
 
@@ -73,7 +75,6 @@ class crawler:
         else:
             self.used.add(url)
             for found_url in self.find_urls(url):
-                print('[+] ' + found_url)
                 if (found_url in self.used):
                     continue
                 self.crawler(found_url)
@@ -90,7 +91,8 @@ class crawler:
         """
         urls = set()
         domain_name = urlparse(url).netloc
-        soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+        soup = BeautifulSoup(requests.get(
+            url=url, headers=self.headers).content, 'html.parser')
         for a_tag in soup.findAll('a'):
             href = a_tag.attrs.get('href')
             if href is None or href == '':
