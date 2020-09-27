@@ -104,4 +104,5 @@ class crawler:
         return urls
 
 
-crawler()
+if __name__ == '__main__':
+    crawler()
