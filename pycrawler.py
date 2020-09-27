@@ -48,7 +48,7 @@ class crawler:
             bool: whether the url is valid
         """
         parsed = urlparse(url)
-        return parsed.scheme and parsed.netloc
+        return bool(parsed.scheme) and bool(parsed.netloc)
 
     def start_crawler(self):
         """
@@ -102,13 +102,13 @@ class crawler:
             href = urljoin(url, href)
             parsed_href = urlparse(href)
             href = parsed_href.scheme + '://' + parsed_href.netloc + parsed_href.path
-            print('[+] ' + href)
-            if self.is_valid_url(href):
+            if not self.is_valid_url(href):
                 continue
             if href in self.used:
                 continue
             if self.domain not in href:
                 continue
+            print('[+] ' + href)
             urls.add(href)
         return urls
 
