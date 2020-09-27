@@ -1,8 +1,7 @@
 from argparse import ArgumentParser
-import re
-
-VALID_URL = re.compile(
-    '((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*')
+import requests
+from urllib.parse import urlparse, urljoin
+from bs4 import BeautifulSoup
 
 
 class crawler:
@@ -33,22 +32,27 @@ class crawler:
         return parser.parse_args()
 
     def start_crawler(self):
-        try:
-            self.domain = VALID_URL.match(
-                self.parser.domain[0]).string
+        if(is_valid_url(self.domain[0])):
+            self.domain = self.parser.domain[0]
             print('[+] Domain -> ' + self.domain)
-        except:
+        else:
             raise TypeError(
                 f'given domain is not valid "{self.parser.domain[0]}"')
 
     def crawler(self, url):
-        if (type(url) is not str):
+        if (self.domain not in url):
             pass
         else:
             self.used.add(url)
             for found_url in find_urls(url):
                 if (found_url in self.used):
                     continue
+                self.crawler
+
+    @staticmethod
+    def is_valid_url(url):
+        parsed = urlparse(url)
+        return parsed.scheme and parsed.netloc
 
     def find_urls(self, url):
         pass
