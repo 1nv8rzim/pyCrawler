@@ -104,8 +104,6 @@ class crawler:
             href = parsed_href.scheme + '://' + parsed_href.netloc + parsed_href.path
             if not self.is_valid_url(href):
                 continue
-            if href in self.used:
-                continue
             if self.domain not in href:
                 continue
             urls.add(href)
