@@ -28,9 +28,23 @@ class crawler:
             argparse.Namespace : returns parsed command line arguments
         """
         parser = ArgumentParser()
-        parser.add_argument('domain', nargs=1, type=str,
+        parser.add_argument('domain', type=str,
                             help='target domain for webcrawler')
         return parser.parse_args()
+
+    @staticmethod
+    def is_valid_url(url):
+        """
+        Checks if a url is valid 
+
+        Args:
+            url (str): url whose validity is in question
+
+        Returns:
+            bool: whether the url is valid
+        """
+        parsed = urlparse(url)
+        return parsed.scheme and parsed.netloc
 
     def start_crawler(self):
         """
@@ -39,12 +53,12 @@ class crawler:
         Raises:
             TypeError: raises error if domain is not valid
         """
-        if(is_valid_url(self.domain[0])):
-            self.domain = self.parser.domain[0]
+        if(self.is_valid_url(self.parser.domain)):
+            self.domain = self.parser.domain
             print('[+] Domain -> ' + self.domain)
         else:
             raise TypeError(
-                f'given domain is not valid "{self.parser.domain[0]}"')
+                f'given domain is not valid "{self.parser.domain}"')
 
     def crawler(self, url):
         """
@@ -61,20 +75,6 @@ class crawler:
                 if (found_url in self.used):
                     continue
                 self.crawler
-
-    @staticmethod
-    def is_valid_url(url):
-        """
-        Checks if a url is valid 
-
-        Args:
-            url (str): url whose validity is in question
-
-        Returns:
-            bool: whether the url is valid
-        """
-        parsed = urlparse(url)
-        return parsed.scheme and parsed.netloc
 
     def find_urls(self, url):
         """
