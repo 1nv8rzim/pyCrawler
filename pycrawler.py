@@ -72,20 +72,18 @@ class crawler:
         Args:
             url ([str]): given url of the page that will be used to find all urls on the page and runs the same command
         """
+        self.add_crawler(url)
         if self.domain not in url:
-            self.used.add(url)
+            pass
         elif url[-4:].lower() in ('.jpg', 'jpeg', '.png', '.gif', '.pdf', 'tiff', '.raw'):
-            self.used.add(url)
+            pass
         elif url[-5].lower() == '.html':
-            self.used.add(url)
             for found_url in self.find_urls(url):
                 if (found_url in self.used):
                     continue
                 self.crawler(found_url)
         elif url[-3].lower() == '.js':
             pass
-        else:
-            self.used.add(url)
 
     def find_urls(self, url):
         """
