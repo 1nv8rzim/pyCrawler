@@ -95,18 +95,19 @@ class crawler:
         domain_name = urlparse(url).netloc
         soup = BeautifulSoup(requests.get(
             url=url, headers=HEADERS).content, 'html.parser')
-        for a_tag in soup.findAll('a'):
-            href = a_tag.attrs.get('href')
-            if href is None or href == '':
-                continue
-            href = urljoin(url, href)
-            parsed_href = urlparse(href)
-            href = parsed_href.scheme + '://' + parsed_href.netloc + parsed_href.path
-            if not self.is_valid_url(href):
-                continue
-            if self.domain not in href:
-                continue
-            urls.add(href)
+        for tags in [('a', 'href'), ('script', 'src'), ('img', 'src')]:
+            for a_tag in soup.findAll(tags[0]):
+                tag = a_tag.attrs.get(tags[1])
+                if tag is None or tag == '':
+                    continue
+                tag = urljoin(url, tag)
+                parsed_tag = urlparse(tag)
+                tag = parsed_tag.scheme + '://' + parsed_tag.netloc + parsed_tag.path
+                if not self.is_valid_url(tag):
+                    continue
+                if self.domain not in tag:
+                    self.used.add(tag)
+                urls.add(tag)
         return urls
 
 
