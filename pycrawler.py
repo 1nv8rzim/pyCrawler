@@ -66,7 +66,7 @@ class crawler:
         """
         if(self.is_valid_url(self.parser.domain)):
             self.domain = self.parser.domain
-            self.debug('[X] Domain -> ' + self.domain)
+            self.debug('[X] Domain -> ', self.domain)
             for url in self.find_urls(self.domain):
                 self.crawler(url)
         else:
@@ -80,18 +80,22 @@ class crawler:
         Args:
             url ([str]): given url of the page that will be used to find all urls on the page and runs the same command
         """
-        self.debug('[X] crawling ', url)
+        self.debug('[X] crawling', url)
         self.used.add(url)
         if urlparse(self.domain).netloc not in url:
+            self.debug('    >', url, 'is not domain')
             pass
         elif url[-4:].lower() in ('.jpg', 'jpeg', '.png', '.gif', '.pdf', 'tiff', '.raw'):
+            self.debug('    >', url, 'is an image')
             pass
         elif url[-5].lower() == '.html':
+            self.debug('    >', url, 'is an html page')
             for found_url in self.find_urls(url):
                 if (found_url in self.used):
                     continue
                 self.crawler(found_url)
         elif url[-3].lower() == '.js':
+            self.debug('    >', url, 'is an javascript')
             pass
             # TODO add js parsing for URLs
 
