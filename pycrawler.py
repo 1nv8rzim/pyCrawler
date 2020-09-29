@@ -19,14 +19,14 @@ class crawler:
         """
         self.parser = self.arguments()
         self.domain = ''
-        self.debug = bool(self.parser.debug)
+        self.verbosity = bool(self.parser.verbose)
         self.used = set()
         self.start_crawler()
         for url in sorted(list(self.used)):
             print('[+] ' + url)
 
     def debug(self, *args):
-        if self.debug:
+        if self.verbosity:
             print(*args)
 
     def arguments(self):
