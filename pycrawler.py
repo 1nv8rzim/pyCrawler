@@ -85,16 +85,16 @@ class crawler:
         if urlparse(self.domain).netloc not in url:
             self.debug('    >', url, 'is not domain')
             pass
-        elif url[-4:].lower() in ('.jpg', 'jpeg', '.png', '.gif', '.pdf', 'tiff', '.raw'):
+        elif url.split('.')[-1].lower() in ('jpg', 'jpeg', 'png', 'gif', 'pdf', 'tiff', 'raw'):
             self.debug('    >', url, 'is an image')
             pass
-        elif url[-5].lower() == '.html':
+        elif url.split('.')[-1].lower() == 'html':
             self.debug('    >', url, 'is an html page')
             for found_url in self.find_urls(url):
                 if (found_url in self.used):
                     continue
                 self.crawler(found_url)
-        elif url[-3].lower() == '.js':
+        elif url.split('.')[-1].lower() == 'js':
             self.debug('    >', url, 'is an javascript')
             pass
             # TODO add js parsing for URLs
