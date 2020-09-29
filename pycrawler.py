@@ -39,7 +39,8 @@ class crawler:
         parser = ArgumentParser()
         parser.add_argument('domain', type=str,
                             help='target domain for webcrawler')
-        parser.add_argument('-v', '--verbose')
+        parser.add_argument('-v', '--verbose',
+                            action='store_true', help='increases verbosity of output')
         return parser.parse_args()
 
     @staticmethod
