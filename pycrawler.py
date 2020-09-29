@@ -19,10 +19,15 @@ class crawler:
         """
         self.parser = self.arguments()
         self.domain = ''
+        self.debug = bool(self.parser.debug)
         self.used = set()
         self.start_crawler()
         for url in sorted(list(self.used)):
             print('[+] ' + url)
+
+    def debug(self, *args):
+        if self.debug:
+            print(*args)
 
     def arguments(self):
         """
@@ -34,6 +39,7 @@ class crawler:
         parser = ArgumentParser()
         parser.add_argument('domain', type=str,
                             help='target domain for webcrawler')
+        parser.add_argument('-v', '--verbose')
         return parser.parse_args()
 
     @staticmethod
@@ -59,7 +65,7 @@ class crawler:
         """
         if(self.is_valid_url(self.parser.domain)):
             self.domain = self.parser.domain
-            print('[X] Domain -> ' + self.domain)
+            self.debug('[X] Domain -> ' + self.domain)
             for url in self.find_urls(self.domain):
                 self.crawler(url)
         else:
@@ -73,8 +79,9 @@ class crawler:
         Args:
             url ([str]): given url of the page that will be used to find all urls on the page and runs the same command
         """
+        self.debug('[X] crawling ', url)
         self.used.add(url)
-        if self.domain not in url:
+        if urlparse(self.domain).netloc not in url:
             pass
         elif url[-4:].lower() in ('.jpg', 'jpeg', '.png', '.gif', '.pdf', 'tiff', '.raw'):
             pass
@@ -85,7 +92,7 @@ class crawler:
                 self.crawler(found_url)
         elif url[-3].lower() == '.js':
             pass
-            # TODO add js parsing
+            # TODO add js parsing for URLs
 
     def find_urls(self, url):
         """
