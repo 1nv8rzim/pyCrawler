@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 import requests
 from urllib.parse import urlparse, urljoin
 from bs4 import BeautifulSoup
+import re
 
 
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0', 'Accept': 'image/webp,*/*',
@@ -94,10 +95,15 @@ class crawler:
                 if (found_url in self.used):
                     continue
                 self.crawler(found_url)
-        elif url.split('.')[-1].lower() == 'js':
-            self.debug('    >', url, 'is an javascript')
-            pass
-            # TODO add js parsing for URLs
+        else:
+            try:
+                urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', str(
+                    requests.get(url=url, headers=HEADERS).content))
+                for found_url in urls:
+                    if self.is_valid_url(found_url):
+                        self.crawler(found_url)
+            except:
+                pass
 
     def find_urls(self, url):
         """
