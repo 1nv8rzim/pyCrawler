@@ -90,11 +90,14 @@ class crawler:
         new_urls = urls - self.used
 
         while new_urls:
-            url = new_urls.pop()
-            self.debug('[+] Crawling', url)
-            self.used.add(url)
-            urls = urls.union(self.find_urls(url))
-            new_urls = urls - self.used
+            try:
+                url = new_urls.pop()
+                self.debug('[+] Crawling', url)
+                self.used.add(url)
+                urls = urls.union(self.find_urls(url))
+                new_urls = urls - self.used
+            except:
+                pass
 
     def crawler_recursive(self, url):
         """
@@ -118,9 +121,9 @@ class crawler:
                 for found_url in urls:
                     if (found_url in self.used):
                         continue
-                    self.crawler_recursive(found_url
+                    self.crawler_recursive(found_url)
             elif self.maxurls <= len(urls) + len(self.used):
-                self.used=self.used.union(set(urls))
+                self.used = self.used.union(urls)
             else:
                 for found_url in urls:
                     if (found_url in self.used):
@@ -128,14 +131,14 @@ class crawler:
                     self.crawler_recursive(found_url)
         else:
             try:
-                urls=re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', str(
+                urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', str(
                     requests.get(url=url, headers=self.HEADERS).content))
                 if self.max_urls is None:
                     for found_url in urls:
                         if self.is_valid_url(found_url):
                             self.crawler_recursive(found_url)
                 elif self.maxurls <= len(urls) + len(self.used):
-                    self.used=self.used.union(set(urls))
+                    self.used = self.used.union(set(urls))
                 else:
                     for found_url in urls:
                         if self.is_valid_url(found_url):
@@ -160,27 +163,27 @@ class crawler:
             self.debug('    >', url, 'is an image')
             return set()
         elif url.split('.')[-1].lower() == 'html' or url == self.domain:
-            urls=set()
-            domain_name=urlparse(url).netloc
-            soup=BeautifulSoup(requests.get(
+            urls = set()
+            domain_name = urlparse(url).netloc
+            soup = BeautifulSoup(requests.get(
                 url=url, headers=self.HEADERS).content, 'html.parser')
             for tags in [('a', 'href'), ('script', 'src'), ('img', 'src')]:
                 for a_tag in soup.findAll(tags[0]):
-                    tag=a_tag.attrs.get(tags[1])
+                    tag = a_tag.attrs.get(tags[1])
                     if tag is None or tag == '':
                         continue
-                    tag=urljoin(url, tag)
-                    parsed_tag=urlparse(tag)
-                    tag=parsed_tag.scheme + '://' + parsed_tag.netloc + parsed_tag.path
+                    tag = urljoin(url, tag)
+                    parsed_tag = urlparse(tag)
+                    tag = parsed_tag.scheme + '://' + parsed_tag.netloc + parsed_tag.path
                     if not self.is_valid_url(tag):
                         continue
                     urls.add(tag)
             return urls
         else:
-            urls=set(re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', str(
+            urls = set(re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', str(
                 requests.get(url=url, headers=self.HEADERS).content)))
             return urls
 
 
 if __name__ == '__main__':
-    crawl=crawler()
+    crawl = crawler()
