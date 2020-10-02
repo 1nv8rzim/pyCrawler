@@ -78,7 +78,7 @@ class crawler:
                 for url in self.find_urls(self.domain):
                     self.crawler_recursive(url)
             else:
-                self.crawler(domain)
+                self.crawler(self.domain)
         else:
             raise TypeError(
                 f'given domain is not valid "{self.parser.domain}"')
