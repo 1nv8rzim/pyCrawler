@@ -5,14 +5,13 @@ from bs4 import BeautifulSoup
 import re
 
 
-HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0', 'Accept': 'image/webp,*/*',
-           'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
-
-
 class crawler:
     """
     Main class for pycrawler
     """
+
+    self.HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0', 'Accept': 'image/webp,*/*',
+                    'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
 
     def __init__(self):
         """
@@ -120,7 +119,7 @@ class crawler:
         else:
             try:
                 urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', str(
-                    requests.get(url=url, headers=HEADERS).content))
+                    requests.get(url=url, headers=self.HEADERS).content))
                 for found_url in urls:
                     if self.is_valid_url(found_url):
                         self.crawler_recursive(found_url)
@@ -147,7 +146,7 @@ class crawler:
             urls = set()
             domain_name = urlparse(url).netloc
             soup = BeautifulSoup(requests.get(
-                url=url, headers=HEADERS).content, 'html.parser')
+                url=url, headers=self.HEADERS).content, 'html.parser')
             for tags in [('a', 'href'), ('script', 'src'), ('img', 'src')]:
                 for a_tag in soup.findAll(tags[0]):
                     tag = a_tag.attrs.get(tags[1])
@@ -162,7 +161,7 @@ class crawler:
             return urls
         else:
             urls = set(re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', str(
-                requests.get(url=url, headers=HEADERS).content)))
+                requests.get(url=url, headers=self.HEADERS).content)))
             return urls
 
 
