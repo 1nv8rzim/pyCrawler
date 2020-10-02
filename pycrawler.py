@@ -89,7 +89,7 @@ class crawler:
         urls.add(self.domain)
         new_urls = urls - self.used
 
-        while new_urls and self.max_urls < len(self.used.union(urls)):
+        while new_urls and self.max_urls > len(self.used.union(urls)) if self.max_urls is not None else True:
             try:
                 url = new_urls.pop()
                 self.debug('[+] Crawling', url)
@@ -98,6 +98,8 @@ class crawler:
                 new_urls = urls - self.used
             except:
                 pass
+        self.debug('[+] Finished Crawling')
+        self.used = self.used.union(urls)
 
     def crawler_recursive(self, url):
         """
