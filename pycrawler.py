@@ -87,8 +87,9 @@ class crawler:
         urls = set(url)
         new_urls = urls - self.used
 
-        while not new_urls:
+        while new_urls:
             temp_url = new_urls.pop()
+            self.debug('[+] Crawling', temp_url)
             self.used.add(temp_url)
             urls += self.find_urls(temp_url)
             new_urls = urls - self.used
