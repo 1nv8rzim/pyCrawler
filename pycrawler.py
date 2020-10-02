@@ -27,6 +27,9 @@ class crawler:
             print('[+] ' + url)
 
     def debug(self, *args):
+        """
+        prints verbose output if verbosity is enabled
+        """
         if self.verbosity:
             print(*args)
 
