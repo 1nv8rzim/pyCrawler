@@ -88,12 +88,10 @@ class crawler:
 
         while new_urls:
             url = new_urls.pop()
-
             self.debug('[+] Crawling', url)
             self.used.add(url)
             urls = urls.union(self.find_urls(url))
             new_urls = urls - self.used
-            print(new_urls)
 
     def crawler_recursive(self, url):
         """
@@ -142,7 +140,7 @@ class crawler:
         elif url.split('.')[-1].lower() in ('jpg', 'jpeg', 'png', 'gif', 'pdf', 'tiff', 'raw'):
             self.debug('    >', url, 'is an image')
             return set()
-        elif url.split('.')[-1].lower() == 'html':
+        elif url.split('.')[-1].lower() == 'html' or url == self.domain:
             urls = set()
             domain_name = urlparse(url).netloc
             soup = BeautifulSoup(requests.get(
