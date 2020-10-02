@@ -85,6 +85,9 @@ class crawler:
                 f'given domain is not valid "{self.parser.domain}"')
 
     def crawler(self):
+        """
+        Crawls webpages across a domain using while loop
+        """
         urls = set()
         urls.add(self.domain)
         new_urls = urls - self.used
