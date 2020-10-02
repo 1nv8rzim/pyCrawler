@@ -10,13 +10,12 @@ class crawler:
     Main class for pycrawler
     """
 
-    self.HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0', 'Accept': 'image/webp,*/*',
-                    'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
-
     def __init__(self):
         """
         Initializes crawler class
         """
+        self.HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:81.0) Gecko/20100101 Firefox/81.0', 'Accept': 'image/webp,*/*',
+                        'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
         self.parser = self.arguments()
         self.domain = ''
         self.verbosity = bool(self.parser.verbose)
@@ -94,6 +93,7 @@ class crawler:
             self.used.add(url)
             urls = urls.union(self.find_urls(url))
             new_urls = urls - self.used
+            print(new_urls)
 
     def crawler_recursive(self, url):
         """
