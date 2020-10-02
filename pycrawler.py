@@ -23,6 +23,7 @@ class crawler:
         self.verbosity = bool(self.parser.verbose)
         self.used = set()
         self.start_crawler()
+        self.recursive = self.parser.recursive
         for url in sorted(list(self.used)):
             print('[+] ' + url)
 
@@ -41,6 +42,8 @@ class crawler:
             argparse.Namespace : returns parsed command line arguments
         """
         parser = ArgumentParser()
+        parser.add_argument('-r', '--recursive', action='store_true',
+                            help='makes mainloop of crawler use a recursive meathod')
         parser.add_argument('domain', type=str,
                             help='target domain for webcrawler')
         parser.add_argument('-v', '--verbose',
@@ -72,12 +75,12 @@ class crawler:
             self.domain = self.parser.domain
             self.debug('[X] Domain -> ', self.domain)
             for url in self.find_urls(self.domain):
-                self.crawler(url)
+                self.crawler_recursive(url)
         else:
             raise TypeError(
                 f'given domain is not valid "{self.parser.domain}"')
 
-    def crawler(self, url):
+    def crawler_recursive(self, url):
         """
         Recursive call for crawler that iterates through all url present with a domain
 
@@ -97,14 +100,14 @@ class crawler:
             for found_url in self.find_urls(url):
                 if (found_url in self.used):
                     continue
-                self.crawler(found_url)
+                self.crawler_recursive(found_url)
         else:
             try:
                 urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', str(
                     requests.get(url=url, headers=HEADERS).content))
                 for found_url in urls:
                     if self.is_valid_url(found_url):
-                        self.crawler(found_url)
+                        self.crawler_recursive(found_url)
             except:
                 pass
 
