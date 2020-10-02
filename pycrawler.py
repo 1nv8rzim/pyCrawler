@@ -97,7 +97,7 @@ class crawler:
                 urls = urls.union(self.find_urls(url))
                 new_urls = urls - self.used
             except:
-                pass
+                self.debug('    > not a valid url')
         self.debug('[+] Finished Crawling')
         self.used = self.used.union(urls)
 
