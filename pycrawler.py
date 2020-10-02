@@ -84,7 +84,8 @@ class crawler:
                 f'given domain is not valid "{self.parser.domain}"')
 
     def crawler(self, url):
-        urls = set(url)
+        urls = set()
+        urls.add(url)
         new_urls = urls - self.used
 
         while new_urls:
