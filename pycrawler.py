@@ -78,21 +78,22 @@ class crawler:
                 for url in self.find_urls(self.domain):
                     self.crawler_recursive(url)
             else:
-                self.crawler(self.domain)
+                self.crawler()
         else:
             raise TypeError(
                 f'given domain is not valid "{self.parser.domain}"')
 
-    def crawler(self, url):
+    def crawler(self):
         urls = set()
-        urls.add(url)
+        urls.add(self.domain)
         new_urls = urls - self.used
 
         while new_urls:
-            temp_url = new_urls.pop()
-            self.debug('[+] Crawling', temp_url)
-            self.used.add(temp_url)
-            urls.union(self.find_urls(temp_url))
+            url = new_urls.pop()
+
+            self.debug('[+] Crawling', url)
+            self.used.add(url)
+            urls = urls.union(self.find_urls(url))
             new_urls = urls - self.used
 
     def crawler_recursive(self, url):
@@ -136,22 +137,33 @@ class crawler:
         Returns:
             set : set of unique urls to given page
         """
-        urls = set()
-        domain_name = urlparse(url).netloc
-        soup = BeautifulSoup(requests.get(
-            url=url, headers=HEADERS).content, 'html.parser')
-        for tags in [('a', 'href'), ('script', 'src'), ('img', 'src')]:
-            for a_tag in soup.findAll(tags[0]):
-                tag = a_tag.attrs.get(tags[1])
-                if tag is None or tag == '':
-                    continue
-                tag = urljoin(url, tag)
-                parsed_tag = urlparse(tag)
-                tag = parsed_tag.scheme + '://' + parsed_tag.netloc + parsed_tag.path
-                if not self.is_valid_url(tag):
-                    continue
-                urls.add(tag)
-        return urls
+        if urlparse(self.domain).netloc not in url:
+            self.debug('    >', url, 'is not domain')
+            pass
+        elif url.split('.')[-1].lower() in ('jpg', 'jpeg', 'png', 'gif', 'pdf', 'tiff', 'raw'):
+            self.debug('    >', url, 'is an image')
+            pass
+        elif url.split('.')[-1].lower() == 'html':
+            urls = set()
+            domain_name = urlparse(url).netloc
+            soup = BeautifulSoup(requests.get(
+                url=url, headers=HEADERS).content, 'html.parser')
+            for tags in [('a', 'href'), ('script', 'src'), ('img', 'src')]:
+                for a_tag in soup.findAll(tags[0]):
+                    tag = a_tag.attrs.get(tags[1])
+                    if tag is None or tag == '':
+                        continue
+                    tag = urljoin(url, tag)
+                    parsed_tag = urlparse(tag)
+                    tag = parsed_tag.scheme + '://' + parsed_tag.netloc + parsed_tag.path
+                    if not self.is_valid_url(tag):
+                        continue
+                    urls.add(tag)
+            return urls
+        else:
+            urls = set(re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', str(
+                requests.get(url=url, headers=HEADERS).content)))
+            return urls
 
 
 if __name__ == '__main__':
