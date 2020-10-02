@@ -89,7 +89,7 @@ class crawler:
         urls.add(self.domain)
         new_urls = urls - self.used
 
-        while new_urls:
+        while new_urls and self.max_urls < len(self.used.union(urls)):
             try:
                 url = new_urls.pop()
                 self.debug('[+] Crawling', url)
