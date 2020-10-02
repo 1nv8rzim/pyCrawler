@@ -23,7 +23,7 @@ class crawler:
         self.verbosity = bool(self.parser.verbose)
         self.used = set()
         self.start_crawler()
-        self.recursive = self.parser.recursive
+        self.recursive = self.parser.recursive is not None
         for url in sorted(list(self.used)):
             print('[+] ' + url)
 
@@ -74,11 +74,24 @@ class crawler:
         if(self.is_valid_url(self.parser.domain)):
             self.domain = self.parser.domain
             self.debug('[X] Domain -> ', self.domain)
-            for url in self.find_urls(self.domain):
-                self.crawler_recursive(url)
+            if self.recursive:
+                for url in self.find_urls(self.domain):
+                    self.crawler_recursive(url)
+            else:
+                self.crawler(domain)
         else:
             raise TypeError(
                 f'given domain is not valid "{self.parser.domain}"')
+
+    def crawler(self, url):
+        urls = set(url)
+        new_urls = urls - self.used
+
+        while not new_urls:
+            temp_url = new_urls.pop()
+            self.used.add(temp_url)
+            urls += self.find_urls(temp_url)
+            new_urls = urls - self.used
 
     def crawler_recursive(self, url):
         """
