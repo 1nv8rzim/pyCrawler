@@ -22,8 +22,8 @@ class crawler:
         self.domain = ''
         self.verbosity = bool(self.parser.verbose)
         self.used = set()
+        self.recursive = self.parser.recursive
         self.start_crawler()
-        self.recursive = self.parser.recursive is not None
         for url in sorted(list(self.used)):
             print('[+] ' + url)
 
