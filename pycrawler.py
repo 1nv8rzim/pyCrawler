@@ -93,6 +93,8 @@ class crawler:
         new_urls = urls - self.used
 
         while new_urls and self.max_urls > len(self.used.union(urls)) if self.max_urls is not None else True:
+            if not new_urls:
+                break
             try:
                 url = new_urls.pop()
                 self.debug('[+] Crawling', url)
@@ -100,6 +102,8 @@ class crawler:
                 urls = urls.union(self.find_urls(url))
                 new_urls = urls - self.used
             except:
+                self.used.add(url)
+                new_urls = urls - self.used
                 self.debug('    > not a valid url')
         self.debug('[+] Finished Crawling')
         self.used = self.used.union(urls)
