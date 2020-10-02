@@ -106,7 +106,7 @@ class crawler:
         self.debug('[X] crawling', url)
         self.used.add(url)
         if urlparse(self.domain).netloc not in url:
-            self.debug('    >', url, 'is not domain')
+            self.debug('    >', url, 'is not in domain')
             pass
         elif url.split('.')[-1].lower() in ('jpg', 'jpeg', 'png', 'gif', 'pdf', 'tiff', 'raw'):
             self.debug('    >', url, 'is an image')
@@ -138,11 +138,11 @@ class crawler:
             set : set of unique urls to given page
         """
         if urlparse(self.domain).netloc not in url:
-            self.debug('    >', url, 'is not domain')
-            pass
+            self.debug('    >', url, 'is not in domain')
+            return set()
         elif url.split('.')[-1].lower() in ('jpg', 'jpeg', 'png', 'gif', 'pdf', 'tiff', 'raw'):
             self.debug('    >', url, 'is an image')
-            pass
+            return set()
         elif url.split('.')[-1].lower() == 'html':
             urls = set()
             domain_name = urlparse(url).netloc
